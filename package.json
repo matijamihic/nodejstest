@@ -4,6 +4,11 @@
     "dependencies": {
         "express": "~4.0.0",
         "mongoose": "~3.6.13",
-        "body-parser": "~1.0.1"
+        "body-parser": "~1.0.1",
+        "nodemon": "~1.8.4",
+        "bcrypt": "~3.0.1",
+        "express-session": "~1.15.6",
+        "connnnect-mongo": "~2.0.1" 
+        
     }
 }

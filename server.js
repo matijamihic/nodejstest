@@ -49,6 +49,9 @@ router.route('/users')
 
         var user = new User();      // create a new instance of the User model
         user.name = req.body.name;  // set the users name (comes from the request)
+        user.email = req.body.email;
+        user.password = req.body.password;
+        user.passwordConf = req.body.passwordConf;
 
         // save the user and check for errors
         user.save(function(err) {
@@ -119,7 +122,7 @@ router.route('/users/:user_id')
     });
 
 
-// REGISTER OUR ROUTES -------------------------------
+// REGISTER ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use('/api', router);
 
