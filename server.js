@@ -18,8 +18,16 @@ var User     = require('./app/models/user');
 
 var port = process.env.PORT || 8080;        // set our port
 
+// include routes
+var routes = require('./app/routes/router');
+//app.use('/', routes);
 
-
+// error handler
+// define as the last app.use callback
+app.use(function (err, req, res, next) {
+  res.status(err.status || 500);
+  res.send(err.message);
+});
 
 
 // ROUTES FOR OUR API
