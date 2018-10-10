@@ -4,8 +4,7 @@ var router = express.Router();
 var User = require('../models/user');
 var path = require("path");
 var app = express();
-
-var router = express.Router();              // get an instance of the express Router
+var router = express.Router(); // get an instance of the express Router
 
 // middleware to use for all requests
 router.use(function(req, res, next) {
@@ -14,10 +13,13 @@ router.use(function(req, res, next) {
     next(); // make sure we go to the next routes and don't stop here
 });
 
+//-----------------------------------------------------------------------
+//----------API-----------------------------------------------------
+//------------------------------------------------------------------------  
 
-// test route to make sure everything is working (accessed at GET http://localhost:8080/api)
+// test route to make sure everything is working (accessed at GET https://nodebeer-krilas.c9users.io/api/)
 router.get('/api', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' });   
+    res.json({ message: 'Welcome to the api!' });   
 });
 
 router.route('/api/users')
@@ -60,6 +62,7 @@ router.route('/api/users/:user_id')
         User.findById(req.params.user_id, function(err, user) {
             if (err)
                 res.send(err);
+                
             res.json(user);
         });
     })
@@ -98,12 +101,13 @@ router.route('/api/users/:user_id')
             res.json({ message: 'Successfully deleted' });
         });
     });
-    
+//-----------------------------------------------------------------------
+//----------FRONTEND-----------------------------------------------------
+//------------------------------------------------------------------------    
 //GET route for index
 router.get(['/', 'index.html'], function(req, res, next) {
   var user = User.findById(req.session.userId)
     .exec(function (error, user) {
-      console.log(user);
       if (error) {
         return next(error);
       } else {
@@ -160,6 +164,7 @@ router.post('/', function (req, res, next) {
 
   } else if (req.body.logemail && req.body.logpassword) {
     User.authenticate(req.body.logemail, req.body.logpassword, function (error, user) {
+      console.log(user);
       if (error || !user) {
         var err = new Error('Wrong email or password.');
         err.status = 401;

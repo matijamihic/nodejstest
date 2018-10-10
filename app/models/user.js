@@ -23,7 +23,6 @@ var UserSchema = new mongoose.Schema({
   }
 });
 
-
 //authenticate input against database
 UserSchema.statics.authenticate = function (email, password, callback) {
   User.findOne({ email: email })
@@ -44,7 +43,6 @@ UserSchema.statics.authenticate = function (email, password, callback) {
       })
     });
 }
-
 
 //hashing a password before saving it to the database
 UserSchema.pre('save', function (next) {
