@@ -22,40 +22,40 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <body>
 	<h1>Test Order EJS🚀 </h1>
 	<!-- main -->
-	<% if(userName){ %>
-		<p>Hello, <%= userName  %>!</p>
+	<% if(userData.name){ %>
+		<p>Hello, <%= userData.name  %>!</p>
 		<a href="/logout">Log out</a>
 	<% } else{ %>  
-		<p>Hello, You! Please Login or <a href="/login.html" class="text-primary">Register</a></p>
+		<p>Hello, You! Please <a href="/login.html" class="text-primary">Login or Register</a></p>
 	<% } %>
 	
 	<div class="main">
 		<!--login-profile-->
-		
-		<!--login-profile-->
-			<% if(userName){ %>
+			<% if(userData.name){ %>
 				<a href="/profile">Edit profile</a>
 				<a href="/logout">Log out</a>
-			<% } else{ %>
-				<!--signin-form-->
+			<% } %>
+				<!--order-form-->
 				<div class="w3">
 					<div class="signin-form profile">
-						<h3>Login</h3>
+						<h3>Order</h3>
 						
-						<div class="login-form">
-							<form action="/" method="post">
-								<input type="text" name="logemail" placeholder="E-mail" required="">
-								<input type="password" name="logpassword" placeholder="Password" required="">
+						<div class="order-form">
+							<form action="/order" method="post">
+								<input type="text" name="logorder" placeholder="Order" required="">
+								<input type="text" name="logaddress" placeholder=<% if(userData.address){ %><%= userData.address  %> 
+									<% } else {%> Address <% } %> required="">
+								<input type="text" name="logname" placeholder=
+									<% if(userData.name){ %><%= userData.name  %> 
+									<% } else {%> Name <% } %> required="">
 								<div class="tp">
-									<input type="submit" value="LOGIN NOW">
-									<p><a href="/login.html" class="text-primary">Register here</a></p>
+									<input type="submit" value="ORDER NOW">
 								</div>
 							</form>
 						</div>
 					</div>
 				</div>
 				<div class="clear"></div>
-			<% } %>
 		<!--//signin-form-->	
 	</div>
 	<div class="copyright">

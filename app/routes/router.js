@@ -108,9 +108,19 @@ router.get(['/', 'index.html'], function(req, res, next) {
         return next(error);
       } else {
         if (user === null) {
-          return res.render('index.ejs', {userName:""});
+          let userData = { 
+            name: "",
+            email: "",
+            address: ""
+          }
+          return res.render('index.ejs', {userData:userData});
         } else {
-          return res.render('index.ejs', {userName:user.name});
+          let userData = { 
+            name: user.name,
+            email: user.email,
+            address: user.address
+          }
+          return res.render('index.ejs', {userData:userData});
         }
       }
     });
@@ -156,9 +166,44 @@ router.post('/', function (req, res, next) {
         return next(err);
       } else {
         req.session.userId = user._id;
-        return res.render('index.ejs', {userName:user.name});
+          let userData = { 
+            name: user.name,
+            id: user._id,
+            address: user.address
+          }
+        return res.render('index.ejs', {userData:userData});
       }
     });
+  } else {
+    var err = new Error('All fields required.');
+    err.status = 400;
+    return next(err);
+  }
+})
+
+//POST route for making an order
+router.post('/order', function (req, res, next) {
+
+  if (req.body.address && req.body.name && req.body.order) {
+
+    var orderData = {
+      address: req.body.address,
+      name: req.body.name
+ //     order: req.body.order
+    }
+    /*
+    Order.create(orderData, function (error, order) {
+      if (error) {
+        return next(error);
+      } else {
+        return res.redirect('/');
+      }
+    });
+
+  } else {
+        return res.render('index.ejs', {userName:"Pero"});
+      }
+    });*/
   } else {
     var err = new Error('All fields required.');
     err.status = 400;
