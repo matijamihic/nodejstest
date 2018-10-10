@@ -25,8 +25,9 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	<% if(userName){ %>
 		<p>Hello, <%= userName  %>!</p>
 		<a href="/logout">Log out</a>
-	<% } %>  
-
+	<% } else{ %>  
+		<p>Hello, You! Please Login or <a href="/login.html" class="text-primary">Register</a></p>
+	<% } %>
 	
 	<div class="main">
 		<!--login-profile-->

@@ -17,7 +17,7 @@ var UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  passwordConf: {
+  address: {
     type: String,
     required: true,
   }

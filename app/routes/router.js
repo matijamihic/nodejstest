@@ -29,7 +29,7 @@ router.route('/api/users')
         user.name = req.body.name;  // set the users name (comes from the request)
         user.email = req.body.email;
         user.password = req.body.password;
-        user.passwordConf = req.body.passwordConf;
+        user.address = req.body.address;
 
         // save the user and check for errors
         user.save(function(err) {
@@ -129,13 +129,13 @@ router.post('/', function (req, res, next) {
   if (req.body.email &&
     req.body.name &&
     req.body.password &&
-    req.body.passwordConf) {
+    req.body.address) {
 
     var userData = {
       email: req.body.email,
       name: req.body.name,
       password: req.body.password,
-      passwordConf: req.body.passwordConf,
+      address: req.body.address,
     }
     
     User.create(userData, function (error, user) {
@@ -181,7 +181,8 @@ router.get('/profile', function (req, res, next) {
               console.log(user);
               let userData = { 
                                 name: user.name,
-                                email: user.email
+                                email: user.email,
+                                address: user.address
                               }
           return res.render('profile.ejs', {user: userData});
         }
