@@ -13,6 +13,16 @@ var MongoStore = require('connect-mongo')(session);
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(session({
+  cookie: {
+    path    : '/',
+    httpOnly: false,
+    maxAge  : 24*60*60*1000
+  },
+  secret: '1234567890QWERT'
+}));
+app.use(express.static('templateLogReg'))
+
 
 // call and connecto to database
 var mongoose   = require('mongoose');

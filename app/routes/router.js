@@ -1,12 +1,9 @@
 var express = require('express');
+var session = require('express-session');
 var router = express.Router();
 var User = require('../models/user');
 var path = require("path");
 var app = express();
-
-console.log('/home/ubuntu/workspace/templateLogReg/index.html');
-
-console.log(path.join(__dirname, '/templateLogRed/index.html'));
 
 var router = express.Router();              // get an instance of the express Router
 
@@ -101,16 +98,12 @@ router.route('/api/users/:user_id')
             res.json({ message: 'Successfully deleted' });
         });
     });
-
-
-
+ 
 // GET route for reading data
-app.get('/', function (req, res, next) {
-  return res.sendFile(path.join(__dirname, 'templateLogRed'));
-  
-//  router.use(express.static(path.resolve(__dirname, 'client')));
-
+router.get('/', function (req, res, next) {
+  return res.sendFile(path.join(__dirname + '/templateLogReg/index.html'));
 });
+
 
 //POST route for updating data
 router.post('/', function (req, res, next) {
@@ -123,18 +116,21 @@ router.post('/', function (req, res, next) {
   }
 
   if (req.body.email &&
-    req.body.username &&
+    req.body.name &&
     req.body.password &&
     req.body.passwordConf) {
 
     var userData = {
       email: req.body.email,
-      username: req.body.username,
+      name: req.body.name,
       password: req.body.password,
       passwordConf: req.body.passwordConf,
     }
+    
+    // console.log(userData);
 
     User.create(userData, function (error, user) {
+      console.log(req.session);
       if (error) {
         return next(error);
       } else {
@@ -160,5 +156,37 @@ router.post('/', function (req, res, next) {
     return next(err);
   }
 })
+
+// GET route after registering
+router.get('/profile', function (req, res, next) {
+  User.findById(req.session.userId)
+    .exec(function (error, user) {
+      if (error) {
+        return next(error);
+      } else {
+        if (user === null) {
+          var err = new Error('Not authorized! Go back!');
+          err.status = 400;
+          return next(err);
+        } else {
+          return res.send('<h1>Name: </h1>' + user.name + '<h2>Mail: </h2>' + user.email + '<br><a type="button" href="/logout">Logout</a>')
+        }
+      }
+    });
+});
+
+// GET for logout logout
+router.get('/logout', function (req, res, next) {
+  if (req.session) {
+    // delete session object
+    req.session.destroy(function (err) {
+      if (err) {
+        return next(err);
+      } else {
+        return res.redirect('/');
+      }
+    });
+  }
+});
 
 module.exports = router;
