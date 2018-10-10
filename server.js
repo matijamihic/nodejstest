@@ -13,6 +13,8 @@ var MongoStore = require('connect-mongo')(session);
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+//use sessions for tracking logins
 app.use(session({
   cookie: {
     path    : '/',
@@ -50,14 +52,14 @@ app.use(function (err, req, res, next) {
 });
 
 //use sessions for tracking logins
-app.use(session({
-  secret: 'work hard',
-  resave: true,
-  saveUninitialized: false,
+//app.use(session({
+//  secret: 'work hard',
+//  resave: true,
+//  saveUninitialized: false,
 //  store: new MongoStore({
 //    mongooseConnection: db
 //  })
-}));
+//}));
 
 // START THE SERVER
 // =============================================================================
