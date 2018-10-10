@@ -9,6 +9,8 @@ var mongoose = require('mongoose');
 var session = require('express-session');
 var MongoStore = require('connect-mongo')(session);
 
+
+app.set("view engine", "ejs")
 // configure app to use bodyParser()
 // this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -23,7 +25,6 @@ app.use(session({
   },
   secret: '1234567890QWERT'
 }));
-app.use(express.static('templateLogReg'))
 
 
 // call and connecto to database
@@ -43,6 +44,8 @@ var port = process.env.PORT || 8080;        // set our port
 // include routes
 var routes = require('./app/routes/router');
 app.use('/', routes);
+app.use(express.static('templateLogReg'))
+
 
 // error handler
 // define as the last app.use callback
@@ -50,16 +53,6 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.send(err.message);
 });
-
-//use sessions for tracking logins
-//app.use(session({
-//  secret: 'work hard',
-//  resave: true,
-//  saveUninitialized: false,
-//  store: new MongoStore({
-//    mongooseConnection: db
-//  })
-//}));
 
 // START THE SERVER
 // =============================================================================

@@ -98,13 +98,24 @@ router.route('/api/users/:user_id')
             res.json({ message: 'Successfully deleted' });
         });
     });
- 
-// GET route for reading data
-router.get('/', function (req, res, next) {
-  return res.sendFile(path.join(__dirname + '/templateLogReg/index.html'));
+    
+//GET route for index
+router.get(['/', 'index.html'], function(req, res, next) {
+  var user = User.findById(req.session.userId)
+    .exec(function (error, user) {
+      console.log(user);
+      if (error) {
+        return next(error);
+      } else {
+        if (user === null) {
+          return res.render('index.ejs', {userName:""});
+        } else {
+          return res.render('index.ejs', {userName:user.name});
+        }
+      }
+    });
 });
-
-
+ 
 //POST route for updating data
 router.post('/', function (req, res, next) {
   // confirm that user typed same password twice
@@ -127,8 +138,6 @@ router.post('/', function (req, res, next) {
       passwordConf: req.body.passwordConf,
     }
     
-    // console.log(userData);
-
     User.create(userData, function (error, user) {
       console.log(req.session);
       if (error) {
@@ -147,7 +156,7 @@ router.post('/', function (req, res, next) {
         return next(err);
       } else {
         req.session.userId = user._id;
-        return res.redirect('/profile');
+        return res.render('index.ejs', {userName:user.name});
       }
     });
   } else {
@@ -165,11 +174,16 @@ router.get('/profile', function (req, res, next) {
         return next(error);
       } else {
         if (user === null) {
-          var err = new Error('Not authorized! Go back!');
+          var err = new Error('<a href="/">Not authorized! Go back!</a>');
           err.status = 400;
           return next(err);
         } else {
-          return res.send('<h1>Name: </h1>' + user.name + '<h2>Mail: </h2>' + user.email + '<br><a type="button" href="/logout">Logout</a>')
+              console.log(user);
+              let userData = { 
+                                name: user.name,
+                                email: user.email
+                              }
+          return res.render('profile.ejs', {user: userData});
         }
       }
     });
