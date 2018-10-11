@@ -2,6 +2,7 @@ var express = require('express');
 var session = require('express-session');
 var router = express.Router();
 var User = require('../models/user');
+var Order = require('../models/order');
 var path = require("path");
 var app = express();
 var router = express.Router(); // get an instance of the express Router
@@ -101,6 +102,20 @@ router.route('/api/users/:user_id')
             res.json({ message: 'Successfully deleted' });
         });
     });
+    
+//Orders API    
+router.route('/api/orders') 
+  // get all the orders (accessed at GET https://nodebeer-krilas.c9users.io/api/orders)
+  .get(function(req, res) {
+      Order.find(function(err, users) {
+          if (err)
+              res.send(err);
+
+          res.json(users);
+      });
+  });
+
+
 //-----------------------------------------------------------------------
 //----------FRONTEND-----------------------------------------------------
 //------------------------------------------------------------------------    
@@ -115,14 +130,16 @@ router.get(['/', 'index.html'], function(req, res, next) {
           let userData = { 
             name: "",
             email: "",
-            address: ""
+            address: "",
+            id: ""
           }
           return res.render('index.ejs', {userData:userData});
         } else {
           let userData = { 
             name: user.name,
             email: user.email,
-            address: user.address
+            address: user.address,
+            id: user._id
           }
           return res.render('index.ejs', {userData:userData});
         }
@@ -153,7 +170,7 @@ router.post('/', function (req, res, next) {
     }
     
     User.create(userData, function (error, user) {
-      console.log(req.session);
+    //  console.log(req.session);
       if (error) {
         return next(error);
       } else {
@@ -164,7 +181,7 @@ router.post('/', function (req, res, next) {
 
   } else if (req.body.logemail && req.body.logpassword) {
     User.authenticate(req.body.logemail, req.body.logpassword, function (error, user) {
-      console.log(user);
+   //   console.log(user);
       if (error || !user) {
         var err = new Error('Wrong email or password.');
         err.status = 401;
@@ -188,15 +205,16 @@ router.post('/', function (req, res, next) {
 
 //POST route for making an order
 router.post('/order', function (req, res, next) {
-
+console.log(req.body);
   if (req.body.address && req.body.name && req.body.order) {
 
     var orderData = {
       address: req.body.address,
-      name: req.body.name
- //     order: req.body.order
+      name: req.body.name,
+      order: req.body.order,
+      id: req.body.id
     }
-    /*
+    
     Order.create(orderData, function (error, order) {
       if (error) {
         return next(error);
@@ -206,11 +224,7 @@ router.post('/order', function (req, res, next) {
     });
 
   } else {
-        return res.render('index.ejs', {userName:"Pero"});
-      }
-    });*/
-  } else {
-    var err = new Error('All fields required.');
+    var err = new Error('All fields required.(order)');
     err.status = 400;
     return next(err);
   }
@@ -232,7 +246,8 @@ router.get('/profile', function (req, res, next) {
               let userData = { 
                                 name: user.name,
                                 email: user.email,
-                                address: user.address
+                                address: user.address,
+                                id: user._id
                               }
           return res.render('profile.ejs', {user: userData});
         }
