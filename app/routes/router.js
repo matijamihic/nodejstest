@@ -3,6 +3,7 @@ var session = require('express-session');
 var router = express.Router();
 var User = require('../models/user');
 var Order = require('../models/order');
+var Item = require('../models/item');
 var path = require("path");
 var app = express();
 var router = express.Router(); // get an instance of the express Router
@@ -22,7 +23,8 @@ router.use(function(req, res, next) {
 router.get('/api', function(req, res) {
     res.json({ message: 'Welcome to the api!' });   
 });
-
+// ----------------------------------------------------
+// ------------USERS API----------------------------------------
 router.route('/api/users')
 
     // create a user (accessed at POST https://nodebeer-krilas.c9users.io/api/users)
@@ -55,7 +57,6 @@ router.route('/api/users')
     });
     
 // on routes that end in /users/:user_id
-// ----------------------------------------------------
 router.route('/api/users/:user_id')
 
     // get the user with that id (accessed at GET https://nodebeer-krilas.c9users.io/api/users/:user_id)
@@ -103,7 +104,9 @@ router.route('/api/users/:user_id')
         });
     });
     
-//Orders API    
+// ----------------------------------------------------
+// -------------ORDRS API---------------------------------------
+ 
 router.route('/api/orders') 
   // get all the orders (accessed at GET https://nodebeer-krilas.c9users.io/api/orders)
   .get(function(req, res) {
@@ -116,7 +119,6 @@ router.route('/api/orders')
   });
   
 // on routes that end in /orders/:order_id
-// ----------------------------------------------------
 router.route('/api/orders/:order_id')
     // delete the order with this id (accessed at DELETE https://nodebeer-krilas.c9users.io/api/orders/:user_id)
     .delete(function(req, res) {
@@ -129,6 +131,38 @@ router.route('/api/orders/:order_id')
             res.json({ message: 'Successfully deleted' });
         });
     });
+    
+// ----------------------------------------------------
+// -------------ITEMS API------------------------------
+
+router.route('/api/items') 
+  // get all the items (accessed at GET https://nodebeer-krilas.c9users.io/api/items)
+  .get(function(req, res) {
+      Item.find(function(err, items) {
+          if (err)
+              res.send(err);
+
+          res.json(items);
+      });
+  })
+  
+  // create an item (accessed at POST https://nodebeer-krilas.c9users.io/api/items)
+  .post(function(req, res) {
+
+      var item = new Item();      // create a new instance of the User model
+      item.name = req.body.name;  // set the item name (comes from the request)
+      item.price = req.body.price;  //set items price
+
+      // save the item and check for errors
+      item.save(function(err) {
+          if (err)
+              res.send(err);
+
+          res.json({ message: 'Item created!' });
+      });
+
+  });
+ 
 
 
 //-----------------------------------------------------------------------
