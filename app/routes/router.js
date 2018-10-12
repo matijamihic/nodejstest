@@ -234,7 +234,13 @@ console.log(req.body);
       if (error) {
         return next(error);
       } else {
-        return res.redirect('/');
+        let orderData = { 
+                  order: req.body.order,
+                  address: req.body.address,
+                  name: req.body.name
+                }
+      return res.render('ordersuccess.ejs', {orderData: orderData});
+  
       }
     });
 
