@@ -3,9 +3,7 @@ var mongoose = require('mongoose');
 var OrderSchema = new mongoose.Schema({
   order: {
     type: String,
-    unique: true,
-    required: true,
-    trim: true
+    required: true
   },
   name: {
     type: String,

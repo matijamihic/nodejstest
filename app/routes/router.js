@@ -107,13 +107,28 @@ router.route('/api/users/:user_id')
 router.route('/api/orders') 
   // get all the orders (accessed at GET https://nodebeer-krilas.c9users.io/api/orders)
   .get(function(req, res) {
-      Order.find(function(err, users) {
+      Order.find(function(err, orders) {
           if (err)
               res.send(err);
 
-          res.json(users);
+          res.json(orders);
       });
   });
+  
+// on routes that end in /orders/:order_id
+// ----------------------------------------------------
+router.route('/api/orders/:order_id')
+    // delete the order with this id (accessed at DELETE https://nodebeer-krilas.c9users.io/api/orders/:user_id)
+    .delete(function(req, res) {
+        Order.remove({
+            _id: req.params.order_id
+        }, function(err, order) {
+            if (err)
+                res.send(err);
+
+            res.json({ message: 'Successfully deleted' });
+        });
+    });
 
 
 //-----------------------------------------------------------------------
@@ -212,7 +227,7 @@ console.log(req.body);
       address: req.body.address,
       name: req.body.name,
       order: req.body.order,
-      id: req.body.id
+      userId: req.body.id
     }
     
     Order.create(orderData, function (error, order) {
