@@ -43,7 +43,10 @@ var port = process.env.PORT || 8080;        // set our port
 
 // include routes
 var routes = require('./app/routes/router');
-app.use('/', routes);
+var frontRoutes = require('./app/routes/frontrouter');
+
+app.use('/api', routes);
+app.use('/', frontRoutes);
 app.use(express.static('templateLogReg'))
 
 

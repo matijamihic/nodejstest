@@ -25,7 +25,7 @@ router.get('/api', function(req, res) {
 });
 // ----------------------------------------------------
 // ------------USERS API----------------------------------------
-router.route('/api/users')
+router.route('/users')
 
     // create a user (accessed at POST https://nodebeer-krilas.c9users.io/api/users)
     .post(function(req, res) {
@@ -57,7 +57,7 @@ router.route('/api/users')
     });
     
 // on routes that end in /users/:user_id
-router.route('/api/users/:user_id')
+router.route('/users/:user_id')
 
     // get the user with that id (accessed at GET https://nodebeer-krilas.c9users.io/api/users/:user_id)
     .get(function(req, res) {
@@ -107,7 +107,7 @@ router.route('/api/users/:user_id')
 // ----------------------------------------------------
 // -------------ORDRS API---------------------------------------
  
-router.route('/api/orders') 
+router.route('/orders') 
   // get all the orders (accessed at GET https://nodebeer-krilas.c9users.io/api/orders)
   .get(function(req, res) {
       Order.find(function(err, orders) {
@@ -119,7 +119,7 @@ router.route('/api/orders')
   });
   
 // on routes that end in /orders/:order_id
-router.route('/api/orders/:order_id')
+router.route('/orders/:order_id')
     // delete the order with this id (accessed at DELETE https://nodebeer-krilas.c9users.io/api/orders/:user_id)
     .delete(function(req, res) {
         Order.remove({
@@ -135,7 +135,7 @@ router.route('/api/orders/:order_id')
 // ----------------------------------------------------
 // -------------ITEMS API------------------------------
 
-router.route('/api/items') 
+router.route('/items') 
   // get all the items (accessed at GET https://nodebeer-krilas.c9users.io/api/items)
   .get(function(req, res) {
       Item.find(function(err, items) {
@@ -162,166 +162,5 @@ router.route('/api/items')
       });
 
   });
- 
-
-
-//-----------------------------------------------------------------------
-//----------FRONTEND-----------------------------------------------------
-//------------------------------------------------------------------------    
-//GET route for index
-router.get(['/', 'index.html'], function(req, res, next) {
-  var user = User.findById(req.session.userId)
-    .exec(function (error, user) {
-      if (error) {
-        return next(error);
-      } else {
-        if (user === null) {
-          let userData = { 
-            name: "",
-            email: "",
-            address: "",
-            id: ""
-          }
-          return res.render('index.ejs', {userData:userData});
-        } else {
-          let userData = { 
-            name: user.name,
-            email: user.email,
-            address: user.address,
-            id: user._id
-          }
-          return res.render('index.ejs', {userData:userData});
-        }
-      }
-    });
-});
- 
-//POST route for updating user data (registration and login)
-router.post('/', function (req, res, next) {
-  // confirm that user typed same password twice
-  if (req.body.password !== req.body.passwordConf) {
-    var err = new Error('Passwords do not match.');
-    err.status = 400;
-    res.send("passwords dont match");
-    return next(err);
-  }
-
-  if (req.body.email &&
-    req.body.name &&
-    req.body.password &&
-    req.body.address) {
-
-    var userData = {
-      email: req.body.email,
-      name: req.body.name,
-      password: req.body.password,
-      address: req.body.address,
-    }
-    
-    User.create(userData, function (error, user) {
-    //  console.log(req.session);
-      if (error) {
-        return next(error);
-      } else {
-        req.session.userId = user._id;
-        return res.redirect('/profile');
-      }
-    });
-
-  } else if (req.body.logemail && req.body.logpassword) {
-    User.authenticate(req.body.logemail, req.body.logpassword, function (error, user) {
-   //   console.log(user);
-      if (error || !user) {
-        var err = new Error('Wrong email or password.');
-        err.status = 401;
-        return next(err);
-      } else {
-        req.session.userId = user._id;
-          let userData = { 
-            name: user.name,
-            id: user._id,
-            address: user.address
-          }
-        return res.render('index.ejs', {userData:userData});
-      }
-    });
-  } else {
-    var err = new Error('All fields required.');
-    err.status = 400;
-    return next(err);
-  }
-})
-
-//POST route for making an order
-router.post('/order', function (req, res, next) {
-console.log(req.body);
-  if (req.body.address && req.body.name && req.body.order) {
-
-    var orderData = {
-      address: req.body.address,
-      name: req.body.name,
-      order: req.body.order,
-      userId: req.body.userId
-    }
-    
-    Order.create(orderData, function (error, order) {
-      if (error) {
-        return next(error);
-      } else {
-        let orderData = { 
-                  order: req.body.order,
-                  address: req.body.address,
-                  name: req.body.name
-                }
-      return res.render('ordersuccess.ejs', {orderData: orderData});
-  
-      }
-    });
-
-  } else {
-    var err = new Error('All fields required.(order)');
-    err.status = 400;
-    return next(err);
-  }
-})
-
-// GET route after registering
-router.get('/profile', function (req, res, next) {
-  User.findById(req.session.userId)
-    .exec(function (error, user) {
-      if (error) {
-        return next(error);
-      } else {
-        if (user === null) {
-          var err = new Error('<a href="/">Not authorized! Go back!</a>');
-          err.status = 400;
-          return next(err);
-        } else {
-              console.log(user);
-              let userData = { 
-                                name: user.name,
-                                email: user.email,
-                                address: user.address,
-                                id: user._id
-                              }
-          return res.render('profile.ejs', {user: userData});
-        }
-      }
-    });
-});
-
-// GET for logout logout
-router.get('/logout', function (req, res, next) {
-  if (req.session) {
-    // delete session object
-    req.session.destroy(function (err) {
-      if (err) {
-        return next(err);
-      } else {
-        return res.redirect('/');
-      }
-    });
-  }
-});
 
 module.exports = router;
