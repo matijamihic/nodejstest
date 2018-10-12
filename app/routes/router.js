@@ -162,7 +162,7 @@ router.get(['/', 'index.html'], function(req, res, next) {
     });
 });
  
-//POST route for updating data
+//POST route for updating user data (registration and login)
 router.post('/', function (req, res, next) {
   // confirm that user typed same password twice
   if (req.body.password !== req.body.passwordConf) {
@@ -227,7 +227,7 @@ console.log(req.body);
       address: req.body.address,
       name: req.body.name,
       order: req.body.order,
-      userId: req.body.id
+      userId: req.body.userId
     }
     
     Order.create(orderData, function (error, order) {

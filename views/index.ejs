@@ -23,7 +23,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	<h1>Test Order EJS🚀 </h1>
 	<!-- main -->
 	<% if(userData.name){ %>
-		<p>Hello, <%= userData.name  %>! <%= userData.id  %></p>
+		<p>Hello, <%= userData.name  %>! </p>
 		<a href="/logout">Log out</a>
 	<% } else{ %>  
 		<p>Hello, You! Please <a href="/login.html" class="text-primary">Login or Register</a></p>
@@ -45,7 +45,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 								<input type="text" name="order" placeholder="Order" required="">
 								<input type="text" name="address" <% if(userData.address){ %>value=<%= userData.address  %><% } %> placeholder= "Address" required="">
 								<input type="text" name="name" <% if(userData.name){ %> value=<%= userData.name  %> <% } %>  placeholder="Name" required="">
-								<input type="hidden" name="userId" <% if(userData.id){ %> value=<%= userData.id  %> <% } %> 	
+								<input type="hidden" name="userId" <% if(userData.id){ %> value=<%= userData.id  %> <% } %> >	
 								<div class="tp">
 									<input type="submit" value="ORDER NOW">
 								</div>

@@ -1,10 +1,7 @@
 var mongoose = require('mongoose');
 
 var OrderSchema = new mongoose.Schema({
-  order: {
-    type: String,
-    required: true
-  },
+
   name: {
     type: String,
     required: true,
@@ -13,6 +10,10 @@ var OrderSchema = new mongoose.Schema({
   address: {
     type: String,
     required: true,
+  },
+    order: {
+    type: String,
+    required: true
   },
   userId: {
     type: String,
