@@ -105,7 +105,7 @@ router.route('/users/:user_id')
     });
     
 // ----------------------------------------------------
-// -------------ORDRS API---------------------------------------
+// -------------ORDERS API---------------------------------------
  
 router.route('/orders') 
   // get all the orders (accessed at GET https://nodebeer-krilas.c9users.io/api/orders)

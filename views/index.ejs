@@ -26,11 +26,15 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 		<div>
 			<p>Hello, <%= userData.name  %>! </p>
 			<a href="/profile">Edit profile</a>
-			<a href="/logout">Log out</a>	
+			<a href="/logout">Log out</a>
 		</div>
 	<% } else{ %>  
 		<p>Hello, You! Please <a href="/login.html" class="text-primary">Login or Register</a></p>
 	<% } %>
+	<p>Items: <%= userData.items  %>! </p>
+    	<% for(var i = 0; i < userData.items.length; i++) { %>
+    		<li><%= userData.items[i].name  %></li>
+		<% } %>
 	
 	<div class="main">
 		<!--order-form-->

@@ -14,30 +14,61 @@ var router = express.Router(); // get an instance of the express Router
 //------------------------------------------------------------------------    
 //GET route for index
 router.get(['/', 'index.html'], function(req, res, next) {
-  var user = User.findById(req.session.userId)
-    .exec(function (error, user) {
-      if (error) {
-        return next(error);
-      } else {
-        if (user === null) {
-          let userData = { 
-            name: "",
-            email: "",
-            address: "",
-            id: ""
+  
+  let itemsDataPr = function() {
+  	return new Promise(function(resolve, reject) {
+  	    Item.find(function (err, items) {
+          if (err) return console.error(err);
+     //         console.log(items);
+              resolve(items);
+        })
+//  		resolve("Return items data");
+  	});	
+  };
+  
+  let userDataPr = function(items = null) {
+  	return new Promise(function(resolve, reject) {
+  	    User.findById(req.session.userId, function (err, user) {
+          if (err) return console.error(err);
+          
+          if (user === null) {
+            let userData = { 
+              name: "",
+              email: "",
+              address: "",
+              id: "",
+              items: items
+            }
+            resolve(userData);
+          } else {
+            let userData = { 
+              name: user.name,
+              email: user.email,
+              address: user.address,
+              id: user._id,
+              items: items
+            }
+            resolve(userData);
           }
-          return res.render('index.ejs', {userData:userData});
-        } else {
-          let userData = { 
-            name: user.name,
-            email: user.email,
-            address: user.address,
-            id: user._id
-          }
-          return res.render('index.ejs', {userData:userData});
-        }
-      }
-    });
+          	  
+      //  resolve(user);
+        })
+ // 		resolve("Return user data");
+  	});	
+  };
+  
+ // console.log(itemsDataPr());
+  
+  itemsDataPr().then(function(result){
+  //  console.log(result);
+  	return userDataPr(result);
+  }).then(function(result){
+    console.log(result);
+    console.log("rendering...");
+    return res.render('index.ejs', {userData:result});
+  });
+
+
 });
  
 //POST route for updating user data (registration and login)
@@ -80,13 +111,7 @@ router.post('/', function (req, res, next) {
         err.status = 401;
         return next(err);
       } else {
-        req.session.userId = user._id;
-          let userData = { 
-            name: user.name,
-            id: user._id,
-            address: user.address
-          }
-        return res.render('index.ejs', {userData:userData});
+        return res.redirect('/');
       }
     });
   } else {
@@ -98,7 +123,7 @@ router.post('/', function (req, res, next) {
 
 //POST route for making an order
 router.post('/order', function (req, res, next) {
-console.log(req.body);
+//console.log(req.body);
   if (req.body.address && req.body.name && req.body.order) {
 
     var orderData = {
