@@ -30,7 +30,6 @@ router.get(['/', 'index.html'], function(req, res, next) {
   	return new Promise(function(resolve, reject) {
   	    User.findById(req.session.userId, function (err, user) {
           if (err) return console.error(err);
-          
           if (user === null) {
             let userData = { 
               name: "",
@@ -50,21 +49,15 @@ router.get(['/', 'index.html'], function(req, res, next) {
             }
             resolve(userData);
           }
-          	  
-      //  resolve(user);
         })
- // 		resolve("Return user data");
   	});	
   };
   
- // console.log(itemsDataPr());
-  
   itemsDataPr().then(function(result){
-  //  console.log(result);
   	return userDataPr(result);
   }).then(function(result){
-    console.log(result);
-    console.log("rendering...");
+  //  console.log(result);
+  //  console.log("rendering...");
     return res.render('index.ejs', {userData:result});
   });
 
@@ -111,7 +104,7 @@ router.post('/', function (req, res, next) {
         err.status = 401;
         return next(err);
       } else {
-        return res.redirect('/');
+        return res.redirect("/");
       }
     });
   } else {

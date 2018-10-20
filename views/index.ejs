@@ -44,7 +44,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 				
 				<div class="order-form">
 					<form action="/order" method="post">
-						<input type="text" name="order" placeholder="Order" required="">
+				    	<% for(var i = 0; i < userData.items.length; i++) { %>
+							<input type="checkbox" name="order" value="<%= userData.items[i].name %>"> I want a <%= userData.items[i].name %><br>
+						<% } %>
+						<!--input type="text" name="order" placeholder="Order" required=""-->
 						<input type="text" name="address" <% if(userData.address){ %>value=<%= userData.address  %><% } %> placeholder= "Address" required="">
 						<input type="text" name="name" <% if(userData.name){ %> value=<%= userData.name  %> <% } %>  placeholder="Name" required="">
 						<input type="hidden" name="userId" <% if(userData.id){ %> value=<%= userData.id  %> <% } %> >	
